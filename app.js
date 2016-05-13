@@ -5,15 +5,23 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 var db = require("./models/database");
 
+
+require("./auth/setupPassport");
+
 var routes = require('./routes/index');
-var survey = require('./routes/survey');
+var survey_router = require('./routes/survey');
+var login_router = require('./auth/login_router');
 
 var session      = require('express-session');
 var flash        = require('req-flash');
+var passport     = require("passport");
 
-var app = express();
+var methodOverride = require('method-override');
+
+var app = express({strict:true});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,15 +35,31 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({ secret: '123' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(flash({ locals: 'flash' }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride("_method"));
 
- 
- 
+
+app.use(function(req,res,next){
+  res.locals.url = req.protocol + '://' + req.get('host') + req.url;
+  res.locals.originalUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+  res.locals.path = req.url;
+  res.locals.originalPath = req.originalUrl;
+  res.locals.user = req.user;
+
+  next();
+});
+
+
 
 
 //app.use('/', routes);
-app.use('/', survey);
+app.use('/', survey_router);
+app.use('/login', login_router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

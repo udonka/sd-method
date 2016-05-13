@@ -1,0 +1,12 @@
+extends layout
+
+block header
+  
+
+block content
+  form(method="post" action="/login")
+    p email address: 
+      input(name="email" type="text")
+    p password:
+      input(name="password" type="text")
+    input(type="submit" value="login")

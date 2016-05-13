@@ -1,10 +1,10 @@
-extends /survey_layout
+extends /layout
 
 block header
   p 漢字の印象 -
-    a(href="/admin/users/#{quest_answer.answerer._id}")= quest_answer.answerer.name
+    a(href="/admin/users/#{quest_answer.answerer._id}") #{quest_answer.answerer.name}
     |さんの
-    a(href="/survey/questionnaires/#{quest_answer.questionnaire}") #{quest_answer.questionnaire.title }このアンケートへの
+    a(href="/questionnaires/#{quest_answer.questionnaire}") #{quest_answer.questionnaire.title }このアンケートへの
     |回答 (作成日:#{quest_answer._id.getTimestamp()})
   h1.h2#questionnaire-title.text-center= questionnaire.title
 
@@ -13,7 +13,7 @@ block header
 block content
   include /survey/include/question_table
 
-  form(method="POST", action="/survey/questionnaires/#{questionnaire._id}/answers/#{quest_answer._id}?_method=put")
+  form(method="POST", action="/questionnaires/#{questionnaire._id}/answers/#{quest_answer._id}?_method=put")
     each answer in quest_answer.answers
       -var question = answer.question;
       h3.n.text-center.question-title(id="#{question.id}_title") #{question.choices.left}←→#{question.choices.right}

@@ -22,7 +22,6 @@ questionnaire_router.get("/",(req,res,next)=>{
 });
 
 
-
 questionnaire_router.get("/answers", (req,res,next)=>{
   co(function*(){
     var answers = yield QuestionnaireAnswer.find({questionnaire:req.questionnaire._id}).populate("answerer").exec();
@@ -56,11 +55,10 @@ function make_answers(questions,body){
 questionnaire_router.post("/answers",(req,res,next)=>{
   co(function*(){
     if(!req.user){
-      req.flash("error","ログインしてください");
-      res.redirect("/");
-      
-      return;
+      req.flash("info", "回答するにはログインしてください。");
+      return res.redirect("/login");
     }
+
     var body = req.body;
     console.log(body);
 
@@ -71,9 +69,6 @@ questionnaire_router.post("/answers",(req,res,next)=>{
     console.log(questionnaire.question_set);
     console.log(questionnaire.question_set.questions);
     var answers = make_answers(questionnaire.question_set.questions, body);
-
-
-    console.log(answers);
 
 
     var newQuestAnswer = new QuestionnaireAnswer({

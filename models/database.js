@@ -14,10 +14,12 @@ mongoose.connection.on('connected', function () {
 });
 
 
+var UserSchema = require("./user.js");
 var QuestionSetSchema = require("./question_set.js");
 var QuestionnaireSchema = require("./questionnaire.js");
 var QuestionnaireAnswerSchema = require("./questionnaire_answer.js");
 
+mongoose.model("User",UserSchema);
 mongoose.model("QuestionSet",QuestionSetSchema);
 mongoose.model("Questionnaire",QuestionnaireSchema);
 mongoose.model("QuestionnaireAnswer",QuestionnaireAnswerSchema);

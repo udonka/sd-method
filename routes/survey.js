@@ -2,6 +2,7 @@ var express = require('express');
 var survey_router = module.exports = express.Router();
 var questionnaires_router = express.Router();
 var questionnaire_router = require("./questionnaire");
+var question_sets_router = require("./question_sets");
 
 //mongoose
 var mongoose = require("mongoose");
@@ -12,46 +13,13 @@ var QuestionnaireAnswer = mongoose.model("QuestionnaireAnswer");
 var _ = require("underscore");
 var co = require("co");
 
+
 survey_router.get("/",(req,res,next)=>{
    res.render("survey" );
 });
 
-survey_router.use("/questionnaires", questionnaires_router);
-
-survey_router.get("/question_sets", (req,res,next)=>{
-  co(function*(){
-    var question_sets = yield QuestionSet.find().exec();
-    res.render("survey/question_sets.jade", {question_sets});
-    //res.render("contents/test", {data:question_sets});
-  }).catch((err)=>{
-    next(err);
-  });
-
-
-});
-
-questionnaires_router.get("/make_question_set",(req,res,next)=>{
-  co(function*(){
-    var newQuestionSet = new QuestionSet({title:"12指標質問",questions:[
-      {title:"あたたかさ", choices:{left:"つめたい", right:"あたたかい", length:5}},
-      {title:"抽象度", choices:{left:"具体的な", right:"抽象的な", length:5}},
-      {title:"硬さ", choices:{left:"かたい", right:"やわらかい", length:5}},
-      {title:"性別", choices:{left:"男らしい", right:"女らしい", length:5}},
-    ]});
-
-    var re = yield newQuestionSet.save();
-
-    //type of res ???
-    //
-    console.log("question set save response");
-    console.log(re);
-
-    res.render("contents/test",{data:re});
-
-  }).catch((err)=>{
-    next(err);
-  });
-});
+survey_router.use("/questionnaires/", questionnaires_router);
+survey_router.use("/question_sets", question_sets_router );
 
 
 questionnaires_router.get("/addnew",(req,res,next)=>{
@@ -69,7 +37,7 @@ questionnaires_router.post("/",(req,res,next)=>{
     });
 
     req.flash("info", "質問の作成に成功しました。");
-    res.redirect("/survey/questionnaires");
+    res.redirect("/questionnaires");
 
   }).catch((err)=>{
     next(err);
@@ -92,7 +60,6 @@ questionnaires_router.get("/",(req,res,next)=>{
 questionnaires_router.param("questionnaire_id",function(req,res,next,questionnaire_id){
   co(function*(){
     console.log("param questionnaire !!!");
-    
     var questionnaire = yield Questionnaire.findById(questionnaire_id).populate("question_set").exec();
 
     if(questionnaire){
@@ -105,9 +72,7 @@ questionnaires_router.param("questionnaire_id",function(req,res,next,questionnai
   }).catch((err)=>{
     next(err);
   });
-
 });
-
 
 questionnaires_router.get("/mypage",(req,res,next)=>{
   //自分の回答が表示される
@@ -125,10 +90,4 @@ questionnaires_router.get("/mypage",(req,res,next)=>{
 
 
 questionnaires_router.use("/:questionnaire_id" , questionnaire_router);
-
-
-
-
-
-
 

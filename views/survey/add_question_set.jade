@@ -1,0 +1,15 @@
+extends /layout
+
+block content
+  h1 質問セットを追加する。
+
+  form(action="/question_sets/" method="POST")
+    p name
+      input(type="text" name="question_set_title")
+
+    p question set (separate by , "　" " " 、)
+      textarea(name="question_set_body" rows="10")
+
+    input(type="submit" name="add question set")
+
+
