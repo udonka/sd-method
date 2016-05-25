@@ -41,18 +41,30 @@ question_sets_router.post("/",(req,res,next)=>{
       return {title:array[0], choices:{left:array[1], right:array[2], length:5}};
     });
 
-    var newQuestionSet = new QuestionSet({title,questions: question_set_array });
+    var newQuestionSet = new QuestionSet({ title, questions: question_set_array });
     var re = yield newQuestionSet.save();
-
 
     //type of res ???
     console.log("question set save response");
     console.log(re);
 
-    res.render("test",{data:re});
+    res.redirect("/question_sets/" + re._id);
 
   }).catch((err)=>{
     next(err);
   });
 });
+
+
+question_sets_router.get("/:question_set_id", (req,res,next)=>{
+  co(function*(){
+    var question_set_id = req.params.question_set_id;
+    var question_set = yield QuestionSet.findById(question_set_id).exec();
+
+    res.render("survey/question_set",{question_set});
+
+  });
+});
+
+
 

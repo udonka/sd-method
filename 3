@@ -31,12 +31,11 @@ questionnaire_router.get("/answers", (req,res,next)=>{
     var user_answers = yield QuestionnaireAnswer.find(
       { questionnaire: req.questionnaire._id }).populate("answerer").exec();
 
-    //ユーザーごとになっていたデータを、質問ごとに転地する作業。ついでに数字を変換するなどもやっている。
-    //[{question:[Question], answers:{value:Number, answerer:[Answerer]}}] こんな感じの構造にする。
-    
+
     var questions = _(user_answers).reduce((questions, user_answer)=>{
       _(user_answer.answers).each(answer=>{
         var question_id =  answer.question._id;
+
         console.log(user_answer);
         if(!questions[question_id]){
           questions[question_id] = {
@@ -44,8 +43,7 @@ questionnaire_router.get("/answers", (req,res,next)=>{
             answers:[]
           };
         }
-
-        //[0,4] の値を [-1,1] に変換
+        //0 - 4 の値を -1 - 1 に変換
         answer.value -= 2;
         answer.value /= 2;
 
@@ -54,20 +52,17 @@ questionnaire_router.get("/answers", (req,res,next)=>{
           answerer:user_answer.answerer._id
         });
 
+
       });
+
       return questions;
     },{});
-    //回答がないやつは取り除く
-    //
-    //！！！！！！！！！！！！！！！！！！１１イマココ！！！！！
 
-    //平均と分散のデータをつけてあげる。
+    
     questions = _(questions).map(question =>{
       var ans_values = _(question.answers).map( ans=>ans.value );
-
       question.average = math.mean( ans_values );
       question.std = math.std( ans_values );
-
       //question.variance = 
       return question;
     });

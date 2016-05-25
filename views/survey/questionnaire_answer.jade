@@ -2,7 +2,7 @@ extends /layout
 
 block header
   p 漢字の印象 -
-    a(href="/admin/users/#{quest_answer.answerer._id}") #{quest_answer.answerer.name}
+    a(href="/admin/users/#{quest_answer.answerer._id}") #{quest_answer.answerer.email}
     |さんの
     a(href="/questionnaires/#{quest_answer.questionnaire}") #{quest_answer.questionnaire.title }このアンケートへの
     |回答 (作成日:#{quest_answer._id.getTimestamp()})
@@ -13,6 +13,7 @@ block header
 block content
   include /survey/include/question_table
 
+  
   form(method="POST", action="/questionnaires/#{questionnaire._id}/answers/#{quest_answer._id}?_method=put")
     each answer in quest_answer.answers
       -var question = answer.question;

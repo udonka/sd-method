@@ -1,0 +1,47 @@
+.higeMeter{
+  $height: 30px;
+
+  $maru-width:$height;
+
+  $ave:60%;
+  $var:30%;
+
+  &__box{
+    position:relative;
+    height:$height;
+    background:blue;
+  }
+
+  &__meter{
+    position:absolute;
+      top:0;
+      //left:$ave;
+
+
+    //width:$var;
+    //ddmin-width:$maru-width;
+    // margin-left:- $var /2;
+
+    height:100%;
+    background:green;
+    opacity:0.8;
+  }
+
+  &__point{
+
+    position:absolute;
+    top:0;
+    left:50%;
+    margin-left:-$maru-width/2;
+
+    height:$height;
+    width:$maru-width;
+
+    border-radius:$height/2;
+
+
+    background:red;
+
+  }
+
+}

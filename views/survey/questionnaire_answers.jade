@@ -1,6 +1,19 @@
 extends /layout
 
+
+block header
+  p 
+    a(href="/questionnaires") &laquo; アンケート一覧
+    | &gt;
+
+    a(href="/questionnaires/#{questionnaire_id}/") アンケート
+
+    // / あたりちゃんと作らないとだめ   or strict mode
+
 block content
+
+
+
   h2 アンケートに対する回答者一覧
   ul
     each answer in answers
@@ -10,37 +23,24 @@ block content
 
   h2 アンケートの集計結果
 
-  div.qAnswer
-    table.qAnswer__table
-      tr.qAnswer__index
-        td.qAnswer__adjective--left あたたかい
-        td.qAnswer__scaleBox--left 
-          div.qAnswer__scale--left(style="width:80%")
-        td.qAnswer__scaleBox--right 
-          div.qAnswer__scale--right(style="width:0%") 
-        td.qAnswer__adjective--right つめたい
+  div
+    table
+      each question in questions
+        tr
+          td=question.question.choices.left
+          td=question.average
+          td=question.std
+          td
+            div.higeMeter__box
+              - var ave_per = question.average*100/2 + 50;
+              - var var_per = question.std*100/2;
+              div.higeMeter__meter(style="left:#{ave_per}%; width:#{var_per*2}%; margin-left:#{-var_per}%;")
 
-      tr.qAnswer__index
-        td.qAnswer__adjective--left あたたかい
-        td.qAnswer__scaleBox--left
-          div.qAnswer__scale--left(style="width:0%") 
-        td.qAnswer__scaleBox--right
-          div.qAnswer__scale--right(style="width:20%") 
-        td.qAnswer__adjective--right つめたい
+                div.higeMeter__point
 
-      tr.qAnswer__index
-        td.qAnswer__adjective--left あたたかい
-        td.qAnswer__scaleBox--left
-          div.qAnswer__scale--left(style="width:0%") 
-        td.qAnswer__scaleBox--right
-          div.qAnswer__scale--right(style="width:30%") 
-        td.qAnswer__adjective--right つめたい
 
-      tr.qAnswer__index
-        td.qAnswer__adjective--left あたたかい
-        td.qAnswer__scaleBox--left
-          div.qAnswer__scale--left(style="width:50%") 
-        td.qAnswer__scaleBox--right
-          div.qAnswer__scale--right(style="width:0%") 
-        td.qAnswer__adjective--right つめたい
+
+            
+          td=question.question.choices.right
+
 

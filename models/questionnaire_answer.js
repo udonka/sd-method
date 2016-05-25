@@ -15,6 +15,7 @@ var QuestionaireAnswerSchema = module.exports = new Schema({
   answers:[AnswerSchema]
 });
 
+
 QuestionaireAnswerSchema.methods.isFilledOut = function(){
   var filledout = _.reduce(this.answers, function(memo,answer){
     console.log("answer");

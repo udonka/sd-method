@@ -1,0 +1,21 @@
+extends /layout
+
+block header
+  p 
+    a(href="/") &laquo; トップへ
+    | &gt; 
+    a(href="/question_sets/") &laquo; 質問セット一覧へ
+
+block content
+  h1 質問セット #{question_set._id} #{question_set.title}
+  ul 
+    each question in question_set.questions
+      li #{question.title} - #{question.choices.left} + #{question.choices.right}
+
+
+  hr
+  p
+    a(href="/question_sets/addnew") 新しい質問セットを作る
+
+
+
