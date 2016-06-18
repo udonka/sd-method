@@ -32,7 +32,7 @@ questionnaires_router.get("/addnew/",(req,res,next)=>{
 questionnaires_router.post("/",(req,res,next)=>{
   co(function*(){
     var question_set_id = req.body.question_set_id;
-    var kanji_list = req.body.kanji_list.split(",");
+    var kanji_list = req.body.kanji_list.split(/、|,| /);
 
     var questionnaires = yield _.map(kanji_list, (kanji)=>{
       return new Questionnaire({title:kanji, question_set:question_set_id}).save();
